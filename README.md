@@ -1,18 +1,37 @@
 # Power Outage Impact Analysis
+
 By Turki Alrasheed
 
-## Introduction  
+---
 
-## Data Cleaning and Exploratory Data Analysis  
+## Introduction
 
-## Assessment of Missingness  
+---
 
-## Hypothesis Testing  
+## Data Cleaning and Exploratory Data Analysis
 
-## Framing a Prediction Problem  
+---
 
-## Baseline Model  
+## Assessment of Missingness
 
-## Final Model  
+---
 
-## Fairness Analysis  
+## Hypothesis Testing
+
+---
+
+## Framing a Prediction Problem
+
+---
+
+## Baseline Model
+
+---
+
+## Final Model
+
+---
+
+## Fairness Analysis
+
+---
