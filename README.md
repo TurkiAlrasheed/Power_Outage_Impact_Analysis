@@ -208,24 +208,79 @@ It's important to note that the features I would know at the start of the power 
 - `'TOTAL.REALGSP'`  
 - `'UTIL.REALGSP'`  
 - `'UTIL.CONTRI'`  
-- `'PC.REALGSP.REL'`  
 - `'POPULATION'`  
 - `'POPDEN_URBAN'`  
 - `'MONTH'`  
 - `'YEAR'`  
-- `'HOUR'`  
-- `'DAY'`  
+- `'OUTAGE.START'`  
 
-All of these information are available at the start of a power outage. Note that `'MONTH'`,`'YEAR'`,`'HOUR'`, and `'DAY'` refer to the start of the power outage, which is available. I created the `'HOUR'`, and `'DAY'` feature columns from the `'OUTAGE.START'` column. I removed `'OUTAGE.RESTORATION`' because we would not know when an outage stopped at the time it started.	
+All of these information are available at the start of a power outage. For example, when an outage starts, we will know which state it is in, which NERC region is responsible for it, the cause, the population of the state, and all other features.  Note that `'MONTH'`,`'YEAR'`, and `'OUTAGE.START'`, refer to the start of the power outage, which is available. I removed `'OUTAGE.RESTORATION`' because we would not know when an outage stopped at the time it started.	
 
 
 ---
 
 # Baseline Model
 
+My baseline model is a Random Forest Regressor with the default parameters. The reason I chose this model because it's good at capturing more complex relationships between features and the response variable, performing better than other models like Linear Regression.
+
+**Chosen features and Brief Reasons**
+
+Nominal (4)
+- `'U.S._STATE'`: Some states may have much higher impact scores.  
+- `'NERC.REGION'`: Some NERC regions may have higher impact scores than others. 
+- `'CAUSE.CATEGORY'`: Some causes result in more impactful power outages.  
+- `'CLIMATE.REGION'`: Some climate regions may result in more impactful power outages.
+
+These nominal features were one-hot encoded to transform them into a format suitable for the random forest regressor model.
+
+Quantitative (9)
+- `'ANOMALY.LEVEL'`: Gives more information about climate in addition to the region.
+- `'TOTAL.CUSTOMERS'`: More customers may lead to more affected customers(more impact).      
+- `'TOTAL.REALGSP'`: Economic activity level may be correlated with impact score.   
+- `'POPULATION'`: Larger population may lead to more impactful power outages.  
+- `'POPDEN_URBAN'`: Higher urban population density may lead to more impactful outages. 
+- `'MONTH'` (Discrete): Outages may differ due to seasonal factors.
+- `'YEAR'` (Discrete): Variation in utility infrastructure year to year and climate influence.
+
+**Model Performance**
+
+RMSE Test: 0.8903798010295916
+
+R² Test: 0.30675095834933175
+
+
+The RMSE is 0.89, which is in terms of standard deviations away from mean since the response variable is standardized. The RMSE is acceptable, but its not too precise. It could be improved. The R² is 0.308, which means that the model only explains about 30.68% of the variance in the target variable. We should improve that. I would say that now the model is not ideal(good). I aim to improve the performance by adding additional features including engineered features and hyperparameter tuning using Grid Search. 
+
 ---
 
 # Final Model
+
+**Added Features and Brief Reasons**
+
+Quantitative (7)
+- `'TOTAL.SALES'`: Total electricity consumption helps capture impact of power outages, since more consumption means more people are impacted.
+- `'TOTAL.PRICE'`: Price of electricity adds another dimension to the model as regions with higher electricity price may have different impacts than regions with lower electricity price.
+- `'UTIL.REALGSP'`: A higher GDP of the utility sector may indicate a region that depends on continous power, which may make it more impactful on people. However, at the same time, it could indicate that impact is less since they can fix the power outage quickly decreasing its impact. Nonetheless, an important feature.
+- `'UTIL.CONTRI'`: Contribution of utility sector to economy. This could mean state heavily invested in utility, which means workers will try to fix it, decreasing its impact. This could also mean it will lead to more impactful power outages since many people depend on them.
+- `'CUSTOMERS.DENSITY'`: This is a feature I made by dividing `'TOTAL.CUSTOMERS'` by `'POPULATION'`. This would capture the pressure from public and the extent of imapct of power outage. So, the more customer density the more impact the power outage has.
+- `'HOUR'` (Discrete): There may be certain hours like peak hours, which may result in more impactful power outages.
+- `'DAY'` (Discrete): outage impact may vary by weekends or weekdays.
+
+I created `'HOUR'` and `'DAY'` column from `'OUTAGE.START'`. I did not include minutes and seconds since it will introduce features, which will likely result in overfitting. Minutes and seconds are not as important. Now, for the `'HOUR'`, `'Day'`, and `'MONTH'`, I encoded them as sin and cosine transformations to caputure their cyclical nature. This encoding will ensure models understands the cyclic relationship between hours/days/months, like the fact that hour 23 is close to hour 0.
+
+My final model is a Random Forest Regressor. I used Grid Search Cross-Validation to determine the highest-performing parameters. 
+
+The highest performing hyperparameters, which were used in the final model, were:
+- max depth: 10
+- n_estimators(number of trees): 100 (default)
+
+**Model Performance**
+
+RMSE Test: 0.8033576233814449
+
+R² Test: 0.4356396188523354
+
+This is an improvement from our baseline model performance. Our RMSE decreased by about 9.7 % and our R² increased by about 42 %. So, overall, my model improved. Although, not perfect, the model can do an adequete job of predicting impact scores based on the features.
 
 ---
 
