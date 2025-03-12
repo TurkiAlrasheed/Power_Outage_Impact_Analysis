@@ -154,7 +154,85 @@ Each slot in this pivot table represents the average impact score conditioned on
 
 ## NMAR Analysis
 
+Columns with missing data are: `'CLIMATE.REGION'`, `'ANOMALY.LEVEL'`, `'CLIMATE.CATEGORY'`, `'TOTAL.PRICE'`, `'TOTAL.SALES'`, `'MONTH'`, `'OUTAGE.START'`, `'OUTAGE.RESTORATION'`.
+
+Now, let’s discuss the possibility of NMAR data in each of these columns.
+
+`'Climate Region'`: In the dataset, the missing 'Climate Region' values have states that are either Hawaii or Alaska. Since this variable is specified by National Centers for Environmental Information. They likely did not give Hawaii and Alaska a Climate Region. This means this Not NMAR. It is location specific.
+
+`'ANOMALY.LEVEL'`, `'CLIMATE.CATEGORY'`, `'MONTH'` and `'OUTAGE.START'`: we can analyze both the same since `'CLIMATE.CATEGORY'` is an encoded version of `'ANOMALY.LEVEL'`. After investigation, we see that these columns are missing when it is mostly 2000. This means it is time-specific. It is likely Not NMAR. 
+
+`'TOTAL.PRICE'` and `'TOTAL.SALES'`: After investigating the dataframe which contains the rows where both are missing at the same time, we see that it's mostly missing when it was July 2016 or the year 2000. This suggests that missingness is time specific. This means this is Not NMAR.
+
+`'OUTAGE.RESTORATION'`: This is a bit harder to analyze since it has more null values and there is no clear pattern of missingness. So, it could be NMAR. However, in the next section I will perform test to see if it depends on an existing column to prove that it's MAR.
+
+In all, since most of the columns' missingness can be explained by location or time, there is no NMAR columns, and the columns are mostly MAR. In the next section, we will analyze the missingness of the `'OUTAGE.RESTORATION'` column.
+
 ## Missingness Dependency
+
+We will further investigate the missingness in the `'OUTAGE.RESTORATION'` column by doing permutation tests to assess the possible dependencies between the missingness of `'OUTAGE.RESTORATION'` and other columns. 
+
+### Permutation Test 1
+**Null Hypothesis:** The missingness of the `'OUTAGE.RESTORATION'` column is not dependent on the `'MONTH'` column 
+
+**Alternate Hypothesis:** The missingness of the `'OUTAGE.RESTORATION'` column is dependent on the `'MONTH'` column 
+
+**Test Statistic:** Total Variation Distance(TVD) since we will treat `'MONTH'` as a category. TVD is perfect for quantifying the difference between two distributions, which is what we are doing now.
+
+The significance level is set to the standard value of 0.05.
+
+Here is the observed distribution of `'MONTH'` when `'OUTAGE.RESTORATION'` is missing and not missing.
+
+<iframe
+  src="assets/month_bar.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+Below is a histogram representing the results of 1000 simulated TVDs under the null hypothesis.
+
+<iframe
+  src="assets/month_t.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+We got a p-value of 0.09, which is greater than the significance level of 0.05. We fail to reject the null hypothesis and conclude that the missingness of the `'OUTAGE.RESTORATION'` column is not likely not dependent on `'MONTH'`.
+
+### Permutation Test 2
+**Null Hypothesis:** The missingness of the `'OUTAGE.RESTORATION'` column is not dependent on the `'CAUSE.CATEGORY'` column 
+
+**Alternate Hypothesis:** The missingness of the `'OUTAGE.RESTORATION'` column is dependent on the `'CAUSE.CATEGORY'` column 
+
+**Test Statistic:** Total Variation Distance(TVD) since`'CAUSE.CATEGORY'` is a categorical variable. TVD is perfect for quantifying the difference between two distributions, which is what we are doing now.
+
+The significance level is set to the standard value of 0.05.
+
+Here is the observed distribution of `'CAUSE.CATEGORY'` when `'OUTAGE.RESTORATION'` is missing and not missing.
+
+<iframe
+  src="assets/cause_dist.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+Below is a histogram representing the results of 1000 simulated TVDs under the null hypothesis.
+
+<iframe
+  src="assets/cause_test.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+We got a p-value of 0.002, which is greater than the significance level of 0.05. We reject the null hypothesis and conclude that the missingness of the `'OUTAGE.RESTORATION'` column is likely dependent on `'CAUSE.CATEGORY'`(MAR with respect to `'CAUSE.CATEGORY'`).
+
+
+
+
 
 
 ---
@@ -285,5 +363,25 @@ This is an improvement from our baseline model performance. Our RMSE decreased b
 ---
 
 # Fairness Analysis
+
+My groups for the fairness analysis are populations that are higher than the 3rd quartile of populations(highly populated states) and populations that are lower than the 3rd quartile of populations(not highly populated states). I chose these groups because population is a contributer to my model since more people in the state tends to mean higher impact outages. So, I want to make sure that my model performs well similarly for both groups.
+
+I will use the Root Mean Squared Error (RMSE) as the evaluation metric to determine fairness of my model based on the 2 groups mentioned above.
+
+- **Null Hypothesis**: Our model is fair. The RMSE is the same for both highly populated and not highly populated states, and any differences is due to chance.
+- **Alternative Hypothesis**: Our model is unfair. The RMSE is higher for highly populated states.
+- **Test statistic:** Absolute difference in RMSE.
+- **Significance level:** 0.01.
+
+Below is a histogram representing the results of 1000 simulated differences in RMSE under the null Hypothesis.
+
+<iframe
+  src="assets/fairness.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+We get a high p-value of 0.976. We fail to reject the null hypothesis and conclude that our model is likely fair and that the RMSE is the same for both highly populated and not highly populated states, and any differences is due to chance. This is because after performing the permutation test, we were unable to get evidence of unfairness in RMSE results.
 
 ---
