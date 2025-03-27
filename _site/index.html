@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Power Outage Impact Analysis</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Power Outage Impact Analysis" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="Power Outage Impact Analysis" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Power Outage Impact Analysis" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","headline":"Power Outage Impact Analysis","name":"Power Outage Impact Analysis","url":"http://localhost:4000/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" as="style" type="text/css" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=08075d4ff90e1b79addb3466af23c1e6632ff42c">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <a id="skip-to-content" href="#content">Skip to the content.</a>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">Power Outage Impact Analysis</h1>
+      <h2 class="project-tagline"></h2>
+      
+        <a href="https://github.com/TurkiAl2005/Power_Outage_Impact_Analysis" class="btn">View on GitHub</a>
+      
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="power-outage-impact-analysis">Power Outage Impact Analysis</h1>
+
+<p>This is a project for DSC 80 at UCSD.</p>
+
+<p>By Turki Alrasheed</p>
+
+<hr />
+
+<h1 id="introduction">Introduction</h1>
+
+<p>This project analyzes major power outages in the US from January 2000 to July 2016 from a dataset found on Purdue University’s Laboratory for Advancing Sustainable Critical Infrastructure, at https://engineering.purdue.edu/LASCI/research-data/outages.</p>
+
+<p>The dataset includes information about the major outages, more specifically general information(time and state), climate conditions, cause, extent, land-use characteristics, Electricity consumption information, and economic outputs.</p>
+
+<p>I will focus on answering my research question: <strong>What are the signs indicating that a power outage has a big “impact” on people’s lives?</strong> This is important because power outages are events that can have significant economic, social, and infrastructural impacts. Learning the signs of an impactful power outage can help communities and utility companies better prepare for it and reduce its impact.</p>
+
+<p>The original dataFrame contains 1534 rows(1534 outages), and 57 columns. However, I will use some of the columns for my analysis.</p>
+
+<p>Here are the columns(24) I am interested in along with its descriptions:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'YEAR'</code></td>
+      <td>Year when the outage event occurred</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'MONTH'</code></td>
+      <td>Month when the outage event occurred</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'U.S._STATE'</code></td>
+      <td>State the outage occurred in</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'POSTAL.CODE'</code></td>
+      <td>Represents the postal code of the U.S. states</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'NERC.REGION'</code></td>
+      <td>North American Electric Reliability Corporation (NERC) regions involved in the outage event</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'CLIMATE.REGION'</code></td>
+      <td>U.S. Climate regions as specified by National Centers for Environmental Information (9 Regions)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'ANOMALY.LEVEL'</code></td>
+      <td>Oceanic El Niño/La Niña (ONI) index referring to the cold and warm episodes by season</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'CLIMATE.CATEGORY'</code></td>
+      <td>Categories—“Warm”, “Cold” or “Normal” episodes of the climate based on a threshold of ± 0.5 °C for the Oceanic Niño Index (ONI)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'OUTAGE.START.DATE'</code></td>
+      <td>Day of the year when the outage event started</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'OUTAGE.START.TIME'</code></td>
+      <td>Time of the day when the outage event started</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION.DATE'</code></td>
+      <td>Day of the year when power was restored to all the customers</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION.TIME'</code></td>
+      <td>Time of the day when power was restored to all the customers</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code></td>
+      <td>Categories of all the events causing the major power outages</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'OUTAGE.DURATION'</code></td>
+      <td>Duration of outage events (in minutes)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'CUSTOMERS.AFFECTED'</code></td>
+      <td>Number of customers affected by the power outage event</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'TOTAL.PRICE'</code></td>
+      <td>Average monthly electricity price in the U.S. state (cents/kilowatt-hour)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'TOTAL.SALES'</code></td>
+      <td>Total electricity consumption in the U.S. state (megawatt-hour)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'TOTAL.CUSTOMERS'</code></td>
+      <td>Annual number of total customers served in the U.S. state</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'PC.REALGSP.REL'</code></td>
+      <td>Relative per capita real GSP as compared to the total per capita real GDP of the U.S. (expressed as fraction of per capita State real GDP &amp; per capita US real GDP)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'TOTAL.REALGSP'</code></td>
+      <td>Real GSP contributed by all industries (total) (measured in 2009 chained U.S. dollars)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'UTIL.REALGSP'</code></td>
+      <td>Real GSP contributed by Utility industry (measured in 2009 chained U.S. dollars)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'UTIL.CONTRI'</code></td>
+      <td>Utility industry׳s contribution to the total GSP in the State (expressed as percent of the total real GDP that is contributed by the Utility industry) (in %)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'POPULATION'</code></td>
+      <td>Population in the U.S. state in a year</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">'POPDEN_URBAN'</code></td>
+      <td>Population density of the urban areas (persons per square mile)</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h1 id="data-cleaning-and-exploratory-data-analysis">Data Cleaning and Exploratory Data Analysis</h1>
+<p>Before doing exploratory data analysis, I should clean the data.</p>
+<h2 id="cleaning">Cleaning</h2>
+<ul>
+  <li>
+    <p>I selected the columns I am interested in, which are listed above.</p>
+  </li>
+  <li>
+    <p>I combined <code class="language-plaintext highlighter-rouge">'OUTAGE.START.DATE'</code> and <code class="language-plaintext highlighter-rouge">'OUTAGE.START.TIME'</code> columns into one pd.Timestamp column called <code class="language-plaintext highlighter-rouge">'OUTAGE.START'</code>. This would now include date and time. I did the same with <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION.DATE'</code> and <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION.TIME'</code> and named the new column <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code>. Then, I  dropped <code class="language-plaintext highlighter-rouge">'OUTAGE.START.DATE'</code>,<code class="language-plaintext highlighter-rouge">'OUTAGE.START.TIME'</code>,<code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION.DATE'</code>, and <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION.TIME'</code>.</p>
+  </li>
+  <li>
+    <p>I converted <code class="language-plaintext highlighter-rouge">'ANOMALY.LEVEL'</code>,<code class="language-plaintext highlighter-rouge">'OUTAGE.DURATION'</code>,<code class="language-plaintext highlighter-rouge">'TOTAL.PRICE'</code>,<code class="language-plaintext highlighter-rouge">'TOTAL.SALES'</code>,
+<code class="language-plaintext highlighter-rouge">'TOTAL.REALGSP'</code>, <code class="language-plaintext highlighter-rouge">'UTIL.REALGSP'</code>,<code class="language-plaintext highlighter-rouge">'POPDEN_URBAN'</code>,<code class="language-plaintext highlighter-rouge">'PC.REALGSP.REL'</code>, and <code class="language-plaintext highlighter-rouge">'UTIL.CONTRI'</code> to floats.</p>
+  </li>
+  <li>
+    <p>Some <code class="language-plaintext highlighter-rouge">'OUTAGE.DURATION'</code> and <code class="language-plaintext highlighter-rouge">'CUSTOMERS.AFFECTED'</code> values are 0, which does not make sense. I replaced the 0’s with np.nan since a 0 is likely indicative of missing values.</p>
+  </li>
+  <li>
+    <p>I wanted to create a column called  <code class="language-plaintext highlighter-rouge">'IMPACT_SCORE'</code> by performing principal component analysis(PCA) on the standardized columns of <code class="language-plaintext highlighter-rouge">'OUTAGE.DURATION'</code> and <code class="language-plaintext highlighter-rouge">'CUSTOMERS.AFFECTED'</code>. However, this cannot be performed with np.nan values, so I decided to impute these columns. After performing permutations test for missingness of these columns, I found significant results showing missingness of both columns depending on <code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code>(MAR). So, I performed multiple probabilistic imputation conditioned on <code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code> for both columns. After that, I standardized the columns, performed PCA, and added the column to my dataframe. Lastly, I dropped <code class="language-plaintext highlighter-rouge">'OUTAGE.DURATION'</code> and <code class="language-plaintext highlighter-rouge">'CUSTOMERS.AFFECTED'</code>.</p>
+  </li>
+</ul>
+
+<p>Here is the first 5 rows of my cleaned DataFrame:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">U.S._STATE</th>
+      <th style="text-align: left">POSTAL.CODE</th>
+      <th style="text-align: left">NERC.REGION</th>
+      <th style="text-align: left">CAUSE.CATEGORY</th>
+      <th style="text-align: left">CLIMATE.REGION</th>
+      <th style="text-align: right">ANOMALY.LEVEL</th>
+      <th style="text-align: left">CLIMATE.CATEGORY</th>
+      <th style="text-align: right">TOTAL.CUSTOMERS</th>
+      <th style="text-align: right">TOTAL.PRICE</th>
+      <th style="text-align: right">TOTAL.SALES</th>
+      <th style="text-align: right">TOTAL.REALGSP</th>
+      <th style="text-align: right">UTIL.REALGSP</th>
+      <th style="text-align: right">UTIL.CONTRI</th>
+      <th style="text-align: right">PC.REALGSP.REL</th>
+      <th style="text-align: right">POPULATION</th>
+      <th style="text-align: right">POPDEN_URBAN</th>
+      <th style="text-align: right">MONTH</th>
+      <th style="text-align: right">YEAR</th>
+      <th style="text-align: left">OUTAGE.START</th>
+      <th style="text-align: left">OUTAGE.RESTORATION</th>
+      <th style="text-align: right">IMPACT_SCORE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Minnesota</td>
+      <td style="text-align: left">MN</td>
+      <td style="text-align: left">MRO</td>
+      <td style="text-align: left">severe weather</td>
+      <td style="text-align: left">East North Central</td>
+      <td style="text-align: right">-0.3</td>
+      <td style="text-align: left">normal</td>
+      <td style="text-align: right">2.5957e+06</td>
+      <td style="text-align: right">9.28</td>
+      <td style="text-align: right">6.56252e+06</td>
+      <td style="text-align: right">274182</td>
+      <td style="text-align: right">4802</td>
+      <td style="text-align: right">1.75139</td>
+      <td style="text-align: right">1.07738</td>
+      <td style="text-align: right">5.34812e+06</td>
+      <td style="text-align: right">2279</td>
+      <td style="text-align: right">7</td>
+      <td style="text-align: right">2011</td>
+      <td style="text-align: left">2011-07-01 17:00:00</td>
+      <td style="text-align: left">2011-07-03 20:00:00</td>
+      <td style="text-align: right">-0.113518</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Minnesota</td>
+      <td style="text-align: left">MN</td>
+      <td style="text-align: left">MRO</td>
+      <td style="text-align: left">intentional attack</td>
+      <td style="text-align: left">East North Central</td>
+      <td style="text-align: right">-0.1</td>
+      <td style="text-align: left">normal</td>
+      <td style="text-align: right">2.64074e+06</td>
+      <td style="text-align: right">9.28</td>
+      <td style="text-align: right">5.28423e+06</td>
+      <td style="text-align: right">291955</td>
+      <td style="text-align: right">5226</td>
+      <td style="text-align: right">1.79</td>
+      <td style="text-align: right">1.08979</td>
+      <td style="text-align: right">5.45712e+06</td>
+      <td style="text-align: right">2279</td>
+      <td style="text-align: right">5</td>
+      <td style="text-align: right">2014</td>
+      <td style="text-align: left">2014-05-11 18:38:00</td>
+      <td style="text-align: left">2014-05-11 18:39:00</td>
+      <td style="text-align: right">-0.638695</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Minnesota</td>
+      <td style="text-align: left">MN</td>
+      <td style="text-align: left">MRO</td>
+      <td style="text-align: left">severe weather</td>
+      <td style="text-align: left">East North Central</td>
+      <td style="text-align: right">-1.5</td>
+      <td style="text-align: left">cold</td>
+      <td style="text-align: right">2.5869e+06</td>
+      <td style="text-align: right">8.15</td>
+      <td style="text-align: right">5.22212e+06</td>
+      <td style="text-align: right">267895</td>
+      <td style="text-align: right">4571</td>
+      <td style="text-align: right">1.70627</td>
+      <td style="text-align: right">1.06683</td>
+      <td style="text-align: right">5.3109e+06</td>
+      <td style="text-align: right">2279</td>
+      <td style="text-align: right">10</td>
+      <td style="text-align: right">2010</td>
+      <td style="text-align: left">2010-10-26 20:00:00</td>
+      <td style="text-align: left">2010-10-28 22:00:00</td>
+      <td style="text-align: right">-0.120676</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Minnesota</td>
+      <td style="text-align: left">MN</td>
+      <td style="text-align: left">MRO</td>
+      <td style="text-align: left">severe weather</td>
+      <td style="text-align: left">East North Central</td>
+      <td style="text-align: right">-0.1</td>
+      <td style="text-align: left">normal</td>
+      <td style="text-align: right">2.60681e+06</td>
+      <td style="text-align: right">9.19</td>
+      <td style="text-align: right">5.78706e+06</td>
+      <td style="text-align: right">277627</td>
+      <td style="text-align: right">5364</td>
+      <td style="text-align: right">1.93209</td>
+      <td style="text-align: right">1.07148</td>
+      <td style="text-align: right">5.38044e+06</td>
+      <td style="text-align: right">2279</td>
+      <td style="text-align: right">6</td>
+      <td style="text-align: right">2012</td>
+      <td style="text-align: left">2012-06-19 04:30:00</td>
+      <td style="text-align: left">2012-06-20 23:00:00</td>
+      <td style="text-align: right">-0.179503</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Minnesota</td>
+      <td style="text-align: left">MN</td>
+      <td style="text-align: left">MRO</td>
+      <td style="text-align: left">severe weather</td>
+      <td style="text-align: left">East North Central</td>
+      <td style="text-align: right">1.2</td>
+      <td style="text-align: left">warm</td>
+      <td style="text-align: right">2.67353e+06</td>
+      <td style="text-align: right">10.43</td>
+      <td style="text-align: right">5.97034e+06</td>
+      <td style="text-align: right">292023</td>
+      <td style="text-align: right">4873</td>
+      <td style="text-align: right">1.6687</td>
+      <td style="text-align: right">1.09203</td>
+      <td style="text-align: right">5.48959e+06</td>
+      <td style="text-align: right">2279</td>
+      <td style="text-align: right">7</td>
+      <td style="text-align: right">2015</td>
+      <td style="text-align: left">2015-07-18 02:00:00</td>
+      <td style="text-align: left">2015-07-19 07:00:00</td>
+      <td style="text-align: right">0.243088</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+
+<h3 id="univariate-analysis">Univariate Analysis</h3>
+<p>In my first step of exploratory data analysis, I wanted examine distributions of single variables.</p>
+
+<h4 id="distribution-of-impact-scores-of-power-outages">Distribution of Impact Scores of Power Outages</h4>
+<p>From the histogram and box plot below, we can see that impact scores are highly right skewed, containing many outliers. This makes sense since the dataset contains 1534 rows. We can see that the most common value falls between -0.4 and -0.6 and the median is -0.3, so more values have less impact than the mean, which also makes sense since the outliers push the mean to the right and the values themselves are standard deviations away from the mean.</p>
+
+<iframe src="assets/impact_uni.html" width="800" height="600" frameborder="0"></iframe>
+
+<h4 id="distribution-of-causes-of-power-outages">Distribution of Causes of Power Outages</h4>
+<p>From the bar plot below, we can see that the most common cause of power outages is severe weather, which makes sense from our intuition. It is followed by intentional attack. We see other causes after that, but they are more rare.</p>
+
+<iframe src="assets/causes.html" width="800" height="600" frameborder="0"></iframe>
+
+<h3 id="bivariate-analysis">Bivariate Analysis</h3>
+<h4 id="box-plots-of-impact-scores-by-cause-category">Box Plots of Impact Scores by Cause Category</h4>
+<p>From the plot below, we can see that severe weather has the most outliers, meaning had many impactful power outages. The most impactful power outage observed was caused by a fuel supply emergency. Islanding and public appeal appear to be the least impactful causes.</p>
+<iframe src="assets/impact_cause.html" width="800" height="600" frameborder="0"></iframe>
+
+<h4 id="trend-of-impact-score-over-the-years">Trend of Impact Score over the Years</h4>
+<p>From the line plot below, we can see that the most impactful year was 2002 and the least impactful year was 2013. We see a trend from 2002 that the average impact year is going down over time generally.</p>
+<iframe src="assets/impact_year.html" width="800" height="600" frameborder="0"></iframe>
+
+<h4 id="average-impact-score-by-us-state">Average Impact Score by U.S. State</h4>
+<p>From this map visualization, we can see which states had the most impactful power outages on average and which states had the least impactful power outages on average. For instance, we can see that Florida, West Virginia, and New York had the most impactful power outages on average and Montanta, South Dakota, and Vermont had the least impactful power outages on average.</p>
+<iframe src="assets/impact_state.html" width="800" height="600" frameborder="0"></iframe>
+
+<h3 id="grouping-and-aggregates">Grouping and Aggregates</h3>
+
+<h4 id="impact-score-average-by-nerc-region-and-cause-category">Impact Score Average by NERC Region and Cause Category</h4>
+<p>Each slot in this pivot table represents the average impact score conditioned on the cause category and NERC region. From this, we can see the combinations of NERC region and cause that resulted in high impact power outages from the past. This could help us find powerful patterns, so we can know where impactful power outages occur. We can see that equipment failure in RFC had more powerful power outages than other NERC regions. Also, in RFC, the fuel supply emergency is unusually high due to the outlier we saw in our box plot of impact scores by cause category. Lastly, for severe weather causes, FRCC had most impact power outages on average.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">NERC.REGION</th>
+      <th style="text-align: right">equipment failure</th>
+      <th style="text-align: right">fuel supply emergency</th>
+      <th style="text-align: right">intentional attack</th>
+      <th style="text-align: right">islanding</th>
+      <th style="text-align: right">public appeal</th>
+      <th style="text-align: right">severe weather</th>
+      <th style="text-align: right">system operability disruption</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">ASCC</td>
+      <td style="text-align: right">-0.398372</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ECAR</td>
+      <td style="text-align: right">-0.230388</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">-0.418185</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">0.518388</td>
+      <td style="text-align: right">2.91534</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">FRCC</td>
+      <td style="text-align: right">-0.160836</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">-0.625005</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">-0.116905</td>
+      <td style="text-align: right">1.44744</td>
+      <td style="text-align: right">-0.49631</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">FRCC, SERC</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">0.0508044</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">HECO</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">-0.031349</td>
+      <td style="text-align: right">-0.566547</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">HI</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">0.324253</td>
+      <td style="text-align: right">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">MRO</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">0.775508</td>
+      <td style="text-align: right">-0.376839</td>
+      <td style="text-align: right">-0.647669</td>
+      <td style="text-align: right">-0.552291</td>
+      <td style="text-align: right">0.0497565</td>
+      <td style="text-align: right">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">NPCC</td>
+      <td style="text-align: right">-0.305414</td>
+      <td style="text-align: right">1.0337</td>
+      <td style="text-align: right">-0.592205</td>
+      <td style="text-align: right">-0.545928</td>
+      <td style="text-align: right">-0.310625</td>
+      <td style="text-align: right">0.207407</td>
+      <td style="text-align: right">0.783275</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">PR</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">-0.480671</td>
+      <td style="text-align: right">nan</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">RFC</td>
+      <td style="text-align: right">0.732515</td>
+      <td style="text-align: right">3.27263</td>
+      <td style="text-align: right">-0.562378</td>
+      <td style="text-align: right">-0.643695</td>
+      <td style="text-align: right">-0.524463</td>
+      <td style="text-align: right">0.282686</td>
+      <td style="text-align: right">-0.0424385</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SERC</td>
+      <td style="text-align: right">-0.356173</td>
+      <td style="text-align: right">1.08776</td>
+      <td style="text-align: right">-0.577594</td>
+      <td style="text-align: right">-0.639618</td>
+      <td style="text-align: right">-0.48263</td>
+      <td style="text-align: right">-0.0402071</td>
+      <td style="text-align: right">-0.277758</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SPP</td>
+      <td style="text-align: right">-0.217272</td>
+      <td style="text-align: right">-0.669433</td>
+      <td style="text-align: right">-0.578619</td>
+      <td style="text-align: right">-0.5869</td>
+      <td style="text-align: right">-0.511717</td>
+      <td style="text-align: right">0.389341</td>
+      <td style="text-align: right">2.33478</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">TRE</td>
+      <td style="text-align: right">-0.372642</td>
+      <td style="text-align: right">0.80409</td>
+      <td style="text-align: right">-0.599756</td>
+      <td style="text-align: right">nan</td>
+      <td style="text-align: right">-0.492202</td>
+      <td style="text-align: right">0.549893</td>
+      <td style="text-align: right">-0.0298481</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">WECC</td>
+      <td style="text-align: right">-0.253889</td>
+      <td style="text-align: right">0.456716</td>
+      <td style="text-align: right">-0.567782</td>
+      <td style="text-align: right">-0.635749</td>
+      <td style="text-align: right">-0.412674</td>
+      <td style="text-align: right">0.598164</td>
+      <td style="text-align: right">-0.131216</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h1 id="assessment-of-missingness">Assessment of Missingness</h1>
+
+<h2 id="nmar-analysis">NMAR Analysis</h2>
+
+<p>Columns with missing data are: <code class="language-plaintext highlighter-rouge">'CLIMATE.REGION'</code>, <code class="language-plaintext highlighter-rouge">'ANOMALY.LEVEL'</code>, <code class="language-plaintext highlighter-rouge">'CLIMATE.CATEGORY'</code>, <code class="language-plaintext highlighter-rouge">'TOTAL.PRICE'</code>, <code class="language-plaintext highlighter-rouge">'TOTAL.SALES'</code>, <code class="language-plaintext highlighter-rouge">'MONTH'</code>, <code class="language-plaintext highlighter-rouge">'OUTAGE.START'</code>, <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code>.</p>
+
+<p>Now, let’s discuss the possibility of NMAR data in each of these columns.</p>
+
+<p><code class="language-plaintext highlighter-rouge">'Climate Region'</code>: In the dataset, the missing ‘Climate Region’ values have states that are either Hawaii or Alaska. Since this variable is specified by National Centers for Environmental Information. They likely did not give Hawaii and Alaska a Climate Region. This means this Not NMAR. It is location specific.</p>
+
+<p><code class="language-plaintext highlighter-rouge">'ANOMALY.LEVEL'</code>, <code class="language-plaintext highlighter-rouge">'CLIMATE.CATEGORY'</code>, <code class="language-plaintext highlighter-rouge">'MONTH'</code> and <code class="language-plaintext highlighter-rouge">'OUTAGE.START'</code>: we can analyze both the same since <code class="language-plaintext highlighter-rouge">'CLIMATE.CATEGORY'</code> is an encoded version of <code class="language-plaintext highlighter-rouge">'ANOMALY.LEVEL'</code>. After investigation, we see that these columns are missing when it is mostly 2000. This means it is time-specific. It is likely Not NMAR.</p>
+
+<p><code class="language-plaintext highlighter-rouge">'TOTAL.PRICE'</code> and <code class="language-plaintext highlighter-rouge">'TOTAL.SALES'</code>: After investigating the dataframe which contains the rows where both are missing at the same time, we see that it’s mostly missing when it was July 2016 or the year 2000. This suggests that missingness is time specific. This means this is Not NMAR.</p>
+
+<p><code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code>: This is a bit harder to analyze since it has more null values and there is no clear pattern of missingness. So, it could be NMAR. However, in the next section I will perform test to see if it depends on an existing column to prove that it’s MAR.</p>
+
+<p>In all, since most of the columns’ missingness can be explained by location or time, there is no NMAR columns, and the columns are mostly MAR. In the next section, we will analyze the missingness of the <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> column.</p>
+
+<h2 id="missingness-dependency">Missingness Dependency</h2>
+
+<p>We will further investigate the missingness in the <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> column by doing permutation tests to assess the possible dependencies between the missingness of <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> and other columns.</p>
+
+<h3 id="permutation-test-1">Permutation Test 1</h3>
+<p><strong>Null Hypothesis:</strong> The missingness of the <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> column is not dependent on the <code class="language-plaintext highlighter-rouge">'MONTH'</code> column</p>
+
+<p><strong>Alternate Hypothesis:</strong> The missingness of the <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> column is dependent on the <code class="language-plaintext highlighter-rouge">'MONTH'</code> column</p>
+
+<p><strong>Test Statistic:</strong> Total Variation Distance(TVD) since we will treat <code class="language-plaintext highlighter-rouge">'MONTH'</code> as a category. TVD is perfect for quantifying the difference between two distributions, which is what we are doing now.</p>
+
+<p>The significance level is set to the standard value of 0.05.</p>
+
+<p>Here is the observed distribution of <code class="language-plaintext highlighter-rouge">'MONTH'</code> when <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> is missing and not missing.</p>
+
+<iframe src="assets/month_bar.html" width="800" height="600" frameborder="0"></iframe>
+
+<p>Below is a histogram representing the results of 1000 simulated TVDs under the null hypothesis.</p>
+
+<iframe src="assets/month_t.html" width="800" height="600" frameborder="0"></iframe>
+
+<p>We got a p-value of 0.09, which is greater than the significance level of 0.05. We fail to reject the null hypothesis and conclude that the missingness of the <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> column is not likely not dependent on <code class="language-plaintext highlighter-rouge">'MONTH'</code>.</p>
+
+<h3 id="permutation-test-2">Permutation Test 2</h3>
+<p><strong>Null Hypothesis:</strong> The missingness of the <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> column is not dependent on the <code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code> column</p>
+
+<p><strong>Alternate Hypothesis:</strong> The missingness of the <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> column is dependent on the <code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code> column</p>
+
+<p><strong>Test Statistic:</strong> Total Variation Distance(TVD) since<code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code> is a categorical variable. TVD is perfect for quantifying the difference between two distributions, which is what we are doing now.</p>
+
+<p>The significance level is set to the standard value of 0.05.</p>
+
+<p>Here is the observed distribution of <code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code> when <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> is missing and not missing.</p>
+
+<iframe src="assets/cause_dist.html" width="800" height="600" frameborder="0"></iframe>
+
+<p>Below is a histogram representing the results of 1000 simulated TVDs under the null hypothesis.</p>
+
+<iframe src="assets/cause_test.html" width="800" height="600" frameborder="0"></iframe>
+
+<p>We got a p-value of 0.002, which is greater than the significance level of 0.05. We reject the null hypothesis and conclude that the missingness of the <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION'</code> column is likely dependent on <code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code>(MAR with respect to <code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code>).</p>
+
+<hr />
+
+<h1 id="hypothesis-testing">Hypothesis Testing</h1>
+<p>I will perform a permutation test to see if there’s a significant difference in average impact score when the climate is normal and when the climate is abnormal(warm or cold). The relevant columns for this analysis are <code class="language-plaintext highlighter-rouge">'CLIMATE.CATEGORY'</code> and <code class="language-plaintext highlighter-rouge">'IMPACT_SCORE'</code>. Before performing this test, I filtered the rows to only include causes of severe weather because the other causes like intentional attack have no relation to weather, so if I included it, it would’ve made the results unreliable. Secondly, I classified warm or cold <code class="language-plaintext highlighter-rouge">'CLIMATE.CATEGORY'</code> as abnormal.</p>
+
+<p><strong>Null Hypothesis:</strong> The average impact score of severe weather when the climate is normal the same as the average impact score of severe weather when climate is warm or cold.</p>
+
+<p><strong>Alternate Hypothesis:</strong> The average impact score of severe weather when climate is warm or cold is higher than when climate is normal.</p>
+
+<p><strong>Test Statistic:</strong> Mean of impact score of severe weather in abnormal(hot or cold) climate - Mean of impact score of severe weather in normal climate.</p>
+
+<p>The significance level is set to the standard value of 0.05.</p>
+
+<p>Below is the histogram of 5000 simulated test statistics under the null hypothesis.</p>
+
+<iframe src="assets/hyp_test.html" width="800" height="600" frameborder="0"></iframe>
+
+<p>We get a very high p-value: <strong>0.8266</strong>. This p-value exceeds the significance level, so we fail to reject the null hypothesis. We do not have sufficient statistical evidence to claim that the average impact score of severe weather when climate is abnormal is higher than when climate is normal.</p>
+
+<p><strong>Note:</strong> I performed another test with the alternative hypothesis being that there is a difference in means and with the test statistic being absolute difference of means, resulting in <strong>0.3586</strong> p-value, still failing to reject null hypothesis. These results suggest that there is no strong statistical evidence that average severe weather impact scores differ based on whether the climate is normal or abnormal (warm/cold).</p>
+
+<hr />
+
+<h1 id="framing-a-prediction-problem">Framing a Prediction Problem</h1>
+
+<p>My prediction model will try to predict the impact score of a power outage. This will be a regression problem because we are predicting continuous numerical variables. The response variable will be the <code class="language-plaintext highlighter-rouge">'IMPACT_SCORE'</code> column. I chose this because it is the variable I engineered to represent the impact of a power outage using the number of customers affected and the duration of the power outage.</p>
+
+<h3 id="metrics">Metrics</h3>
+<p><strong>Root Mean Squared Error (RMSE):</strong> I chose this metric because it is sensitive to outliers, which is needed because we want weigh big impact power outages more heavily since it would affect people more.</p>
+
+<p><strong>R² Score:</strong> This is an additional metric to assess how much of the variability in impact scores my model explains.</p>
+
+<h3 id="available-data">Available Data</h3>
+
+<p>It’s important to note that the features I would know at the start of the power outage and the possible features I can use are:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">'U.S._STATE'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'NERC.REGION'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'ANOMALY.LEVEL'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'CLIMATE.REGION'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'TOTAL.CUSTOMERS'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'TOTAL.PRICE'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'TOTAL.SALES'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'TOTAL.REALGSP'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'UTIL.REALGSP'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'UTIL.CONTRI'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'POPULATION'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'POPDEN_URBAN'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'MONTH'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'YEAR'</code></li>
+  <li><code class="language-plaintext highlighter-rouge">'OUTAGE.START'</code></li>
+</ul>
+
+<p>All of these information are available at the start of a power outage. For example, when an outage starts, we will know which state it is in, which NERC region is responsible for it, the cause, the population of the state, and all other features.  Note that <code class="language-plaintext highlighter-rouge">'MONTH'</code>,<code class="language-plaintext highlighter-rouge">'YEAR'</code>, and <code class="language-plaintext highlighter-rouge">'OUTAGE.START'</code>, refer to the start of the power outage, which is available. I removed <code class="language-plaintext highlighter-rouge">'OUTAGE.RESTORATION</code>’ because we would not know when an outage stopped at the time it started.</p>
+
+<hr />
+
+<h1 id="baseline-model">Baseline Model</h1>
+
+<p>My baseline model is a Random Forest Regressor with the default parameters. The reason I chose this model because it’s good at capturing more complex relationships between features and the response variable, performing better than other models like Linear Regression.</p>
+
+<p><strong>Chosen features and Brief Reasons</strong></p>
+
+<p>Nominal (4)</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">'U.S._STATE'</code>: Some states may have much higher impact scores.</li>
+  <li><code class="language-plaintext highlighter-rouge">'NERC.REGION'</code>: Some NERC regions may have higher impact scores than others.</li>
+  <li><code class="language-plaintext highlighter-rouge">'CAUSE.CATEGORY'</code>: Some causes result in more impactful power outages.</li>
+  <li><code class="language-plaintext highlighter-rouge">'CLIMATE.REGION'</code>: Some climate regions may result in more impactful power outages.</li>
+</ul>
+
+<p>These nominal features were one-hot encoded to transform them into a format suitable for the random forest regressor model.</p>
+
+<p>Quantitative (9)</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">'ANOMALY.LEVEL'</code>: Gives more information about climate in addition to the region.</li>
+  <li><code class="language-plaintext highlighter-rouge">'TOTAL.CUSTOMERS'</code>: More customers may lead to more affected customers(more impact).</li>
+  <li><code class="language-plaintext highlighter-rouge">'TOTAL.REALGSP'</code>: Economic activity level may be correlated with impact score.</li>
+  <li><code class="language-plaintext highlighter-rouge">'POPULATION'</code>: Larger population may lead to more impactful power outages.</li>
+  <li><code class="language-plaintext highlighter-rouge">'POPDEN_URBAN'</code>: Higher urban population density may lead to more impactful outages.</li>
+  <li><code class="language-plaintext highlighter-rouge">'MONTH'</code> (Discrete): Outages may differ due to seasonal factors.</li>
+  <li><code class="language-plaintext highlighter-rouge">'YEAR'</code> (Discrete): Variation in utility infrastructure year to year and climate influence.</li>
+</ul>
+
+<p><strong>Model Performance</strong></p>
+
+<p>RMSE Test: 0.8903798010295916</p>
+
+<p>R² Test: 0.30675095834933175</p>
+
+<p>The RMSE is 0.89, which is in terms of standard deviations away from mean since the response variable is standardized. The RMSE is acceptable, but its not too precise. It could be improved. The R² is 0.308, which means that the model only explains about 30.68% of the variance in the target variable. We should improve that. I would say that now the model is not ideal(good). I aim to improve the performance by adding additional features including engineered features and hyperparameter tuning using Grid Search.</p>
+
+<hr />
+
+<h1 id="final-model">Final Model</h1>
+
+<p><strong>Added Features and Brief Reasons</strong></p>
+
+<p>Quantitative (7)</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">'TOTAL.SALES'</code>: Total electricity consumption helps capture impact of power outages, since more consumption means more people are impacted.</li>
+  <li><code class="language-plaintext highlighter-rouge">'TOTAL.PRICE'</code>: Price of electricity adds another dimension to the model as regions with higher electricity price may have different impacts than regions with lower electricity price.</li>
+  <li><code class="language-plaintext highlighter-rouge">'UTIL.REALGSP'</code>: A higher GDP of the utility sector may indicate a region that depends on continous power, which may make it more impactful on people. However, at the same time, it could indicate that impact is less since they can fix the power outage quickly decreasing its impact. Nonetheless, an important feature.</li>
+  <li><code class="language-plaintext highlighter-rouge">'UTIL.CONTRI'</code>: Contribution of utility sector to economy. This could mean state heavily invested in utility, which means workers will try to fix it, decreasing its impact. This could also mean it will lead to more impactful power outages since many people depend on them.</li>
+  <li><code class="language-plaintext highlighter-rouge">'CUSTOMERS.DENSITY'</code>: This is a feature I made by dividing <code class="language-plaintext highlighter-rouge">'TOTAL.CUSTOMERS'</code> by <code class="language-plaintext highlighter-rouge">'POPULATION'</code>. This would capture the pressure from public and the extent of imapct of power outage. So, the more customer density the more impact the power outage has.</li>
+  <li><code class="language-plaintext highlighter-rouge">'HOUR'</code> (Discrete): There may be certain hours like peak hours, which may result in more impactful power outages.</li>
+  <li><code class="language-plaintext highlighter-rouge">'DAY'</code> (Discrete): outage impact may vary by weekends or weekdays.</li>
+</ul>
+
+<p>I created <code class="language-plaintext highlighter-rouge">'HOUR'</code> and <code class="language-plaintext highlighter-rouge">'DAY'</code> column from <code class="language-plaintext highlighter-rouge">'OUTAGE.START'</code>. I did not include minutes and seconds since it will introduce features, which will likely result in overfitting. Minutes and seconds are not as important. Now, for the <code class="language-plaintext highlighter-rouge">'HOUR'</code>, <code class="language-plaintext highlighter-rouge">'Day'</code>, and <code class="language-plaintext highlighter-rouge">'MONTH'</code>, I encoded them as sin and cosine transformations to caputure their cyclical nature. This encoding will ensure models understands the cyclic relationship between hours/days/months, like the fact that hour 23 is close to hour 0.</p>
+
+<p>My final model is a Random Forest Regressor. I used Grid Search Cross-Validation to determine the highest-performing parameters.</p>
+
+<p>The highest performing hyperparameters, which were used in the final model, were:</p>
+<ul>
+  <li>max depth: 10</li>
+  <li>n_estimators(number of trees): 100 (default)</li>
+</ul>
+
+<p><strong>Model Performance</strong></p>
+
+<p>RMSE Test: 0.8033576233814449</p>
+
+<p>R² Test: 0.4356396188523354</p>
+
+<p>This is an improvement from our baseline model performance. Our RMSE decreased by about 9.7 % and our R² increased by about 42 %. So, overall, my model improved. Although, not perfect, the model can do an adequete job of predicting impact scores based on the features.</p>
+
+<hr />
+
+<h1 id="fairness-analysis">Fairness Analysis</h1>
+
+<p>My groups for the fairness analysis are populations that are higher than the 3rd quartile of populations(highly populated states) and populations that are lower than the 3rd quartile of populations(not highly populated states). I chose these groups because population is a contributer to my model since more people in the state tends to mean higher impact outages. So, I want to make sure that my model performs well similarly for both groups.</p>
+
+<p>I will use the Root Mean Squared Error (RMSE) as the evaluation metric to determine fairness of my model based on the 2 groups mentioned above.</p>
+
+<ul>
+  <li><strong>Null Hypothesis</strong>: Our model is fair. The RMSE is the same for both highly populated and not highly populated states, and any differences is due to chance.</li>
+  <li><strong>Alternative Hypothesis</strong>: Our model is unfair. The RMSE is higher for highly populated states.</li>
+  <li><strong>Test statistic:</strong> Absolute difference in RMSE.</li>
+  <li><strong>Significance level:</strong> 0.01.</li>
+</ul>
+
+<p>Below is a histogram representing the results of 1000 simulated differences in RMSE under the null Hypothesis.</p>
+
+<iframe src="assets/fairness.html" width="800" height="600" frameborder="0"></iframe>
+
+<p>We get a high p-value of 0.976. We fail to reject the null hypothesis and conclude that our model is likely fair and that the RMSE is the same for both highly populated and not highly populated states, and any differences is due to chance. This is because after performing the permutation test, we were unable to get evidence of unfairness in RMSE results.</p>
+
+<hr />
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/TurkiAl2005/Power_Outage_Impact_Analysis">Power_Outage_Impact_Analysis</a> is maintained by <a href="https://github.com/TurkiAl2005">TurkiAl2005</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </main>
+  </body>
+</html>

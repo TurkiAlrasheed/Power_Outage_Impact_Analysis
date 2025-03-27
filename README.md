@@ -1,7 +1,5 @@
 # Power Outage Impact Analysis
 
-This is a project for DSC 80 at UCSD.
-
 By Turki Alrasheed
 
 ---
@@ -322,12 +320,12 @@ Quantitative (9)
 
 **Model Performance**
 
-RMSE Test: 0.8903798010295916
+RMSE Test: 0.8921428877482582
 
-R² Test: 0.30675095834933175
+R² Test: 0.3040027641411822
 
 
-The RMSE is 0.89, which is in terms of standard deviations away from mean since the response variable is standardized. The RMSE is acceptable, but its not too precise. It could be improved. The R² is 0.308, which means that the model only explains about 30.68% of the variance in the target variable. We should improve that. I would say that now the model is not ideal(good). I aim to improve the performance by adding additional features including engineered features and hyperparameter tuning using Grid Search. 
+The RMSE is 0.89, which is in terms of standard deviations away from mean since the response variable is standardized. The RMSE is acceptable, but its not too precise. It could be improved. The R² is about 0.3, which means that the model only explains about 30% of the variance in the target variable. We should improve that. I would say that now the model is not ideal(good). I aim to improve the performance by adding additional features including engineered features and hyperparameter tuning using Grid Search. 
 
 ---
 
@@ -354,11 +352,11 @@ The highest performing hyperparameters, which were used in the final model, were
 
 **Model Performance**
 
-RMSE Test: 0.8033576233814449
+RMSE Test: 0.8069550707914643
 
-R² Test: 0.4356396188523354
+R² Test: 0.4305738735545015
 
-This is an improvement from our baseline model performance. Our RMSE decreased by about 9.7 % and our R² increased by about 42 %. So, overall, my model improved. Although, not perfect, the model can do an adequete job of predicting impact scores based on the features.
+This is an improvement from our baseline model performance. Our RMSE decreased by about 9.6 % and our R² increased by about 41.6 %. So, overall, my model improved. Although, not perfect, the model can do an adequete job of predicting impact scores based on the features.
 
 ---
 
