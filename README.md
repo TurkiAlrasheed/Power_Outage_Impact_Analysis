@@ -348,7 +348,7 @@ My final model is a Random Forest Regressor. I used Grid Search Cross-Validation
 
 The highest performing hyperparameters, which were used in the final model, were:
 - max depth: 10
-- n_estimators(number of trees): 100 (default)
+- n_estimators(number of trees): 102
 
 **Model Performance**
 
