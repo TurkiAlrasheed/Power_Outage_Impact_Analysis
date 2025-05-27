@@ -1,4 +1,4 @@
-# OutageAI: Predicting and Explaining Power Outage Impact 
+## OutageAI: Predicting and Explaining Power Outage Impact 
 
 By Turki Alrasheed
 
